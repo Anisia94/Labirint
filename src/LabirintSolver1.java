@@ -114,6 +114,7 @@ public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel {
 
     @Override
     public Boolean nextCellToExplore(int i, int j) {
+        if(i<0 || j<0 || j>+getColumnCount()|| i>= getRowCount()) return false;
         if (maze[i][j]==0 || maze[i][j]==2)
             return true;
         return false;
@@ -185,6 +186,9 @@ public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel {
         catch (IllegalAccessError e){
             // e.getStackTrace();
 
+        }
+        catch(ArrayIndexOutOfBoundsException e){
+            System.out.println("Ati iesit din labirint");
         }
         for (String item : deplasari) {
             System.out.print(item+" ");
