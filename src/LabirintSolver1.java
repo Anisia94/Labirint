@@ -6,10 +6,15 @@ import java.util.Scanner;
 /**
  * Created by Anisia-Ioana on 3/24/2015.
  */
-public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel {
+public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel, LabyrinthObserver {
 
     private Integer[][] maze;
-    Locatie locatie;
+
+    public static void setLocatie(Locatie locatie) {
+        LabirintSolver1.locatie = locatie;
+    }
+
+    public static Locatie locatie;
     public static final int START = -1;
     public static final int FINISH = 2;
     public static final int FREE = 0;
@@ -122,6 +127,8 @@ public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel {
     public void getSolution(){
         //setam locatia de start
        Locatie locatie=getStartCell();
+         LabirintView3 labView3=new LabirintView3();
+        labView3.setMaze(getMaze());
         Scanner scaner=new Scanner(System.in);
         String mutare;
         try {
@@ -131,49 +138,66 @@ public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel {
                 mutare = scaner.next();
                 if (mutare.equals("D")) {
                     if (nextCellToExplore(locatie.i+1, locatie.j)) {
-                        System.out.println("Este permis... am coborat cu o casuta :)");
+                        System.out.println("Este permis   < am coborat cu o casuta >");
                         locatie.i = locatie.i+1;
                         deplasari.add("d");
                         if (maze[locatie.i][locatie.j] == FINISH) {
                             System.out.println("Am ajuns la final!");
+                            processSolution(locatie);
                             break;
                         }
+                        System.out.println("Deplasari efectuate ");
+                        processCell(locatie);
+                        System.out.println(labView3.toString2(locatie));
                     } else {
                         System.out.println("Nu este permis incercati alta varianta!");
                     }
                 } else if (mutare.equals("R")) {
                     if (nextCellToExplore(locatie.i, locatie.j + 1)) {
-                        System.out.println("Este permis... la dreapta cu o casuta :)");
+                        System.out.println("Este permis   < la dreapta cu o casuta >");
                         locatie.j = locatie.j+1;
                         deplasari.add("r");
                         if (maze[locatie.i][locatie.j] == FINISH) {
                             System.out.println("Am ajuns la final!");
+                            processSolution(locatie);
                             break;
                         }
+                        System.out.println("Deplasari efectuate ");
+                        processCell(locatie);
+                        System.out.println(labView3.toString2(locatie));
                     } else {
                         System.out.println("Nu este permis incercati alta varianta!");
                     }
                 } else if (mutare.equals("U")) {
                     if (nextCellToExplore(locatie.i-1, locatie.j)) {
-                        System.out.println("Este permis... am urcat cu o casuta :)");
+                        System.out.println("Este permis   <am urcat cu o casuta >");
                         locatie.i = locatie.i-1;
                         deplasari.add("u");
                         if (maze[locatie.i][locatie.j] == FINISH) {
                             System.out.println("Am ajuns la final!");
+                            processSolution(locatie);
                             break;
                         }
+                        System.out.println("Deplasari efectuate ");
+                        processCell(locatie);
+                        System.out.println(labView3.toString2(locatie));
                     } else {
                         System.out.println("Nu este permis incercati alta varianta!");
                     }
                 } else if (mutare.equals("L")) {
                     if (nextCellToExplore(locatie.i, locatie.j - 1)) {
-                        System.out.println("Este permis... am facut stanga cu o casuta :)");
+                        System.out.println("Este permis    <la stanga cu o casuta >");
                         locatie.j = locatie.j-1;
                         deplasari.add("l");
+
                         if (maze[locatie.i][locatie.j] == FINISH) {
                             System.out.println("Am ajuns la final!");
+                            processSolution(locatie);
                             break;
                         }
+                        System.out.println("Deplasari efectuate ");
+                        processCell(locatie);
+                        System.out.println(labView3.toString2(locatie));
                     } else {
                         System.out.println("Nu este permis incercati alta varianta!");
                     }
@@ -188,11 +212,31 @@ public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel {
 
         }
         catch(ArrayIndexOutOfBoundsException e){
-            System.out.println("Ati iesit din labirint");
+            System.out.println("Eroare! Ati iesit din labirint");
         }
-        for (String item : deplasari) {
-            System.out.print(item+" ");
+//        for (String item : deplasari) {
+//            System.out.print(item+" ");
+//        }
+    }
+
+    @Override
+    public void processCell(Locatie loc) {
+        int i=loc.i;
+        int j=loc.j;
+        for(String item: deplasari){
+            System.out.print(item + " ");
         }
+        System.out.println();
+    }
+
+    @Override
+    public void processSolution(Locatie loc) {
+        int i=loc.i;
+        int j=loc.j;
+        for(String item: deplasari){
+            System.out.print(item + " ");
+        }
+        System.out.println();
     }
 
 }
