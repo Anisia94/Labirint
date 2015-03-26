@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Created by Anisia-Ioana on 3/25/2015.
  */
@@ -13,7 +15,7 @@ public class LabirintView3 implements LabyrinthView {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         String result = "\n";
 
         for (int row = 0; row < maze.length; row++) {
@@ -21,6 +23,7 @@ public class LabirintView3 implements LabyrinthView {
                 result += "|";
                 if (maze[row][column] == -1)
                     result += "S";
+
                 else if (maze[row][column] == 0)
                     result += " ";
                 else if (maze[row][column] == 2)
@@ -35,6 +38,7 @@ public class LabirintView3 implements LabyrinthView {
         }
         return result;
     }
+
     public String toString3() {
         Locatie locatie = new Locatie(-1, -1);
         String result = "\n";
@@ -76,6 +80,43 @@ public class LabirintView3 implements LabyrinthView {
 
                 } else if (maze[row][column] == 0)
                     result += " ";
+                else if (maze[row][column] == 2)
+                    result += "F";
+                else
+                    result += "*";
+                // result += labirint[row][column] + " ";
+
+            }
+            result += "|";
+            result += "\n";
+        }
+        return result;
+    }
+
+
+
+    public String toString5( ArrayList<Locatie> array, Locatie l) {
+        String result = "\n";
+
+        for (int row = 0; row < maze.length; row++) {
+            for (int column = 0; column < maze[0].length; column++)
+                label: {
+                result += "|";
+                if (maze[row][column] == -1)
+                    result += "S";
+                else if (maze[row][column] == 0){
+                    for (Locatie item : array) {
+                        if(l.i==row &&l.j==column){
+                            result += "C";
+                            break label;
+                        }
+                        else if(item.i==row && item.j==column){
+                            result += "X";
+                            break label;
+                        }
+                    }
+                    result += " ";
+                }
                 else if (maze[row][column] == 2)
                     result += "F";
                 else

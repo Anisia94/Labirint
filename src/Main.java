@@ -1,6 +1,6 @@
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws CloneNotSupportedException {
         System.out.println("Hello World!");
       //  Labirint test1= new Labirint();
       //  System.out.println(test1.toString1());

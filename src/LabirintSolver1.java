@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -9,20 +11,24 @@ import java.util.Scanner;
 public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel, LabyrinthObserver {
 
     private Integer[][] maze;
+    private ArrayList<Locatie> parcurgere;
 
     public static void setLocatie(Locatie locatie) {
         LabirintSolver1.locatie = locatie;
     }
 
     public static Locatie locatie;
+
     public static final int START = -1;
     public static final int FINISH = 2;
     public static final int FREE = 0;
     public static final int WALL = 1;
 
     public LabirintSolver1(){
-        this.maze=getMatrixFromFile();
+       this.maze=getMatrixFromFile();
+       // generareAleatoare(7,7);
         this.deplasari=new ArrayList<String>();
+        this.parcurgere=new ArrayList<Locatie>();
     }
 
     public Integer[][] getMaze() {
@@ -66,7 +72,6 @@ public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel, Labyrin
                     break outside;
                 }
             }
-
         }
         return new Locatie(l,c);
     }
@@ -87,6 +92,7 @@ public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel, Labyrin
         }
         return new Locatie(l,c);
     }
+
     public Integer[][] getMatrixFromFile(){
         Integer[][] labirint=new Integer[5][5];
         try {
@@ -124,10 +130,10 @@ public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel, Labyrin
             return true;
         return false;
     }
-    public void getSolution(){
+    public void getSolution() throws CloneNotSupportedException {
         //setam locatia de start
        Locatie locatie=getStartCell();
-         LabirintView3 labView3=new LabirintView3();
+        LabirintView3 labView3=new LabirintView3();
         labView3.setMaze(getMaze());
         Scanner scaner=new Scanner(System.in);
         String mutare;
@@ -140,6 +146,7 @@ public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel, Labyrin
                     if (nextCellToExplore(locatie.i+1, locatie.j)) {
                         System.out.println("Este permis   < am coborat cu o casuta >");
                         locatie.i = locatie.i+1;
+                        parcurgere.add((Locatie) locatie.clone());
                         deplasari.add("d");
                         if (maze[locatie.i][locatie.j] == FINISH) {
                             System.out.println("Am ajuns la final!");
@@ -148,7 +155,8 @@ public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel, Labyrin
                         }
                         System.out.println("Deplasari efectuate ");
                         processCell(locatie);
-                        System.out.println(labView3.toString2(locatie));
+                     //   System.out.println(labView3.toString2(locatie));
+                        System.out.println(labView3.toString5(parcurgere,locatie));
                     } else {
                         System.out.println("Nu este permis incercati alta varianta!");
                     }
@@ -156,6 +164,7 @@ public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel, Labyrin
                     if (nextCellToExplore(locatie.i, locatie.j + 1)) {
                         System.out.println("Este permis   < la dreapta cu o casuta >");
                         locatie.j = locatie.j+1;
+                        parcurgere.add((Locatie) locatie.clone());
                         deplasari.add("r");
                         if (maze[locatie.i][locatie.j] == FINISH) {
                             System.out.println("Am ajuns la final!");
@@ -164,7 +173,8 @@ public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel, Labyrin
                         }
                         System.out.println("Deplasari efectuate ");
                         processCell(locatie);
-                        System.out.println(labView3.toString2(locatie));
+                       // System.out.println(labView3.toString2(locatie));
+                        System.out.println(labView3.toString5(parcurgere,locatie));
                     } else {
                         System.out.println("Nu este permis incercati alta varianta!");
                     }
@@ -172,6 +182,7 @@ public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel, Labyrin
                     if (nextCellToExplore(locatie.i-1, locatie.j)) {
                         System.out.println("Este permis   <am urcat cu o casuta >");
                         locatie.i = locatie.i-1;
+                        parcurgere.add((Locatie) locatie.clone());
                         deplasari.add("u");
                         if (maze[locatie.i][locatie.j] == FINISH) {
                             System.out.println("Am ajuns la final!");
@@ -180,7 +191,9 @@ public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel, Labyrin
                         }
                         System.out.println("Deplasari efectuate ");
                         processCell(locatie);
-                        System.out.println(labView3.toString2(locatie));
+                       // System.out.println(labView3.toString2(locatie));
+                        System.out.println(labView3.toString5(parcurgere,locatie));
+
                     } else {
                         System.out.println("Nu este permis incercati alta varianta!");
                     }
@@ -188,6 +201,7 @@ public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel, Labyrin
                     if (nextCellToExplore(locatie.i, locatie.j - 1)) {
                         System.out.println("Este permis    <la stanga cu o casuta >");
                         locatie.j = locatie.j-1;
+                        parcurgere.add((Locatie) locatie.clone());
                         deplasari.add("l");
 
                         if (maze[locatie.i][locatie.j] == FINISH) {
@@ -197,7 +211,8 @@ public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel, Labyrin
                         }
                         System.out.println("Deplasari efectuate ");
                         processCell(locatie);
-                        System.out.println(labView3.toString2(locatie));
+                      //  System.out.println(labView3.toString2(locatie));
+                        System.out.println(labView3.toString5(parcurgere,locatie));
                     } else {
                         System.out.println("Nu este permis incercati alta varianta!");
                     }
@@ -237,6 +252,21 @@ public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel, Labyrin
             System.out.print(item + " ");
         }
         System.out.println();
+    }
+
+    public void generareAleatoare(int row,int column) {
+        maze = new Integer[row][column];
+        Random random = new Random();
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
+                int randomInteger = random.nextInt(2);
+                maze[i][j] = randomInteger;
+            }
+        }
+        int randomLinie = random.nextInt(column);
+        int randomLinieSfarsit = random.nextInt(column);
+        maze[0][randomLinie] = -1;
+        maze[row - 1][randomLinieSfarsit] = 2;
     }
 
 }
