@@ -19,8 +19,8 @@ public class LabirintSolver2 implements LabyrinthSolver, LabyrinthModel, Labyrin
     public static final int WALL = 1;
 
     public LabirintSolver2() {
-        this.maze = getMatrixFromFile();
-        // generareAleatoare(7,7);
+       // this.maze = getMatrixFromFile();
+         generareAleatoare(7,7);
         this.deplasari = new ArrayList<String>();
         this.parcurgere = new ArrayList<Locatie>();
     }
@@ -255,7 +255,6 @@ public class LabirintSolver2 implements LabyrinthSolver, LabyrinthModel, Labyrin
                         }
                     } else if (mutare.equals("U")) {
                         if (nextCellToExplore(locatie.i, locatie.j - 1)) {
-                            System.out.println("Este permis    <la stanga cu o casuta >");
                             locatie.j = locatie.j-1;
                             parcurgere.add((Locatie) locatie.clone());
                             deplasari.add("u");

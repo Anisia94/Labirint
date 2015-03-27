@@ -39,4 +39,5 @@ public class LabirintView1 implements LabyrinthView, Serializable {
         return result;
     }
 
+
 }

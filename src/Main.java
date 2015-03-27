@@ -17,16 +17,16 @@ public class Main {
                 case 1:
                     LabirintSolver1 lab=new LabirintSolver1();
                     LabirintView1 labview=new LabirintView1();
+                    LabirintView2 labview2=new LabirintView2();
                     labview.setMaze(lab.getMaze());
+                    labview2.setMaze(lab.getMaze());
                     System.out.println(labview.toString());
+                    System.out.println(labview2.toString());
+                    System.out.println(labview2.toString1());
                     lab.getSolution();
 
                     // deserializare
                     LabirintSolver1 lab2=LabirintSolver1.fromFile("Serializare.txt");
-                    System.out.println(lab2.getDeplasari());
-                    System.out.println(lab2.locatie.i);
-                    System.out.println(lab2.locatie.j);
-                    System.out.println(lab2.getParcurgere());
                     lab2.afterSerializationJoc();
                     break;
 
