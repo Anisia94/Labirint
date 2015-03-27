@@ -129,4 +129,39 @@ public class LabirintView3 implements LabyrinthView {
         }
         return result;
     }
+
+    public String toString6( ArrayList<Locatie> array, Locatie l) {
+        String result = "\n";
+
+        for (int row = 0; row < maze.length; row++) {
+            for (int column = 0; column < maze[0].length; column++)
+                label: {
+                    result += "|";
+                    if (maze[row][column] == -1)
+                        result += "S";
+                    else if (maze[row][column] == 0){
+                        for (Locatie item : array) {
+                            if(l.j==row &&l.i==column){
+                                result += "C";
+                                break label;
+                            }
+                            else if(item.j==row && item.i==column){
+                                result += "X";
+                                break label;
+                            }
+                        }
+                        result += " ";
+                    }
+                    else if (maze[row][column] == 2)
+                        result += "F";
+                    else
+                        result += "*";
+                    // result += labirint[row][column] + " ";
+
+                }
+            result += "|";
+            result += "\n";
+        }
+        return result;
+    }
 }
