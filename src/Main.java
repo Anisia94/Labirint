@@ -1,6 +1,8 @@
+import java.io.IOException;
+
 public class Main {
 
-    public static void main(String[] args) throws CloneNotSupportedException {
+    public static void main(String[] args) throws CloneNotSupportedException,ClassNotFoundException, IOException {
         System.out.println("Hello World!");
       //  Labirint test1= new Labirint();
       //  System.out.println(test1.toString1());
@@ -13,6 +15,14 @@ public class Main {
         labview.setMaze(lab.getMaze());
         System.out.println(labview.toString());
         lab.getSolution();
+
+        // deserializare
+        LabirintSolver1 lab2=LabirintSolver1.fromFile("Serializare.txt");
+        System.out.println(lab2.getDeplasari());
+        System.out.println(lab2.locatie.i);
+        System.out.println(lab2.locatie.j);
+        System.out.println(lab2.getParcurgere());
+       lab2.afterSerializationJoc();
 
     }
 }

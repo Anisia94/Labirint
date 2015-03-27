@@ -1,8 +1,10 @@
+import java.io.Serializable;
+
 /**
  * Created by Anisia-Ioana on 3/24/2015.
  */
 
-public class Locatie implements Cloneable {
+public class Locatie implements Cloneable,Serializable {
     public int i;
     public int j;
     public Locatie(int ii, int jj){

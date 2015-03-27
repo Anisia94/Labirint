@@ -1,5 +1,4 @@
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -8,16 +7,16 @@ import java.util.Scanner;
 /**
  * Created by Anisia-Ioana on 3/24/2015.
  */
-public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel, LabyrinthObserver {
+public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel, LabyrinthObserver, Serializable {
 
     private Integer[][] maze;
     private ArrayList<Locatie> parcurgere;
 
-    public static void setLocatie(Locatie locatie) {
-        LabirintSolver1.locatie = locatie;
+    public ArrayList<Locatie> getParcurgere() {
+        return parcurgere;
     }
 
-    public static Locatie locatie;
+    public Locatie locatie;
 
     public static final int START = -1;
     public static final int FINISH = 2;
@@ -29,8 +28,8 @@ public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel, Labyrin
        // generareAleatoare(7,7);
         this.deplasari=new ArrayList<String>();
         this.parcurgere=new ArrayList<Locatie>();
+        this.locatie=getStartCell();
     }
-
     public Integer[][] getMaze() {
         return maze;
     }
@@ -125,14 +124,19 @@ public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel, Labyrin
 
     @Override
     public Boolean nextCellToExplore(int i, int j) {
-        if(i<0 || j<0 || j>+getColumnCount()|| i>= getRowCount()) return false;
+        if(i<0 || j<0 || j>=getColumnCount()|| i>= getRowCount()) return false;
         if (maze[i][j]==0 || maze[i][j]==2)
             return true;
         return false;
     }
+
+    /**
+     * REZOLVARE INTERACTIVA
+     * @throws CloneNotSupportedException
+     */
     public void getSolution() throws CloneNotSupportedException {
         //setam locatia de start
-       Locatie locatie=getStartCell();
+       // setLocatie(getStartCell());
         LabirintView3 labView3=new LabirintView3();
         labView3.setMaze(getMaze());
         Scanner scaner=new Scanner(System.in);
@@ -140,7 +144,7 @@ public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel, Labyrin
         try {
             System.out.println("Ne aflam pe pozitia START...");
             do {
-                System.out.println("Introduceti urmatoarea operatiune: [L,R,U,D,E-exit]");
+                System.out.println("Introduceti urmatoarea operatiune: [L ,R, U, D, E-exit, S-salvare]");
                 mutare = scaner.next();
                 if (mutare.equals("D")) {
                     if (nextCellToExplore(locatie.i+1, locatie.j)) {
@@ -220,6 +224,14 @@ public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel, Labyrin
                 else if (mutare.equals("E")){
                     break;
                 }
+                else if (mutare.equals("S")){
+                    try {
+                        this.toFile("Serializare.txt");
+                    }
+                    catch(IOException e){
+                        System.out.println("Esec la serializare!");
+                    }
+                }
             }while(1==1);
         }
         catch (IllegalAccessError e){
@@ -268,5 +280,127 @@ public class LabirintSolver1 implements LabyrinthSolver, LabyrinthModel, Labyrin
         maze[0][randomLinie] = -1;
         maze[row - 1][randomLinieSfarsit] = 2;
     }
+
+    public void toFile(String filename) throws IOException {
+        FileOutputStream fout = new FileOutputStream(filename);
+        ObjectOutputStream oos = new ObjectOutputStream(fout);
+        oos.writeObject(this);
+    }
+    public static LabirintSolver1 fromFile(String Filename) throws IOException, ClassNotFoundException {
+        FileInputStream fin = new FileInputStream(Filename);
+        ObjectInputStream oin = new ObjectInputStream(fin);
+        return (LabirintSolver1)oin.readObject();
+    }
+
+    public void afterSerializationJoc() throws CloneNotSupportedException {
+        System.out.println("BINE ATI REVENIT IN LABIRINT! incarcam pozitia curenta...");
+        LabirintView3 labView=new LabirintView3();
+        labView.setMaze(getMaze());
+        System.out.println(labView.toString5(parcurgere,locatie));
+        labView.setMaze(getMaze());
+            Scanner scaner=new Scanner(System.in);
+            String mutare;
+            try {
+                do {
+                    System.out.println("Introduceti urmatoarea operatiune: [L ,R, U, D, E-exit, S-salvare]");
+                    mutare = scaner.next();
+                    if (mutare.toUpperCase().equals("D")) {
+                        if (nextCellToExplore(locatie.i+1, locatie.j)) {
+                            System.out.println("Este permis   < am coborat cu o casuta >");
+                            locatie.i = locatie.i+1;
+                            parcurgere.add((Locatie) locatie.clone());
+                            deplasari.add("d");
+                            if (maze[locatie.i][locatie.j] == FINISH) {
+                                System.out.println("Am ajuns la final! FELICITARI!");
+                                processSolution(locatie);
+                                break;
+                            }
+                            System.out.println("Deplasari efectuate ");
+                            processCell(locatie);
+                            //   System.out.println(labView3.toString2(locatie));
+                            System.out.println(labView.toString5(parcurgere,locatie));
+                        } else {
+                            System.out.println("Nu este permis incercati alta varianta!");
+                        }
+                    } else if (mutare.equals("R")) {
+                        if (nextCellToExplore(locatie.i, locatie.j + 1)) {
+                            System.out.println("Este permis   < la dreapta cu o casuta >");
+                            locatie.j = locatie.j+1;
+                            parcurgere.add((Locatie) locatie.clone());
+                            deplasari.add("r");
+                            if (maze[locatie.i][locatie.j] == FINISH) {
+                                System.out.println("Am ajuns la final! FELICITARI!");
+                                processSolution(locatie);
+                                break;
+                            }
+                            System.out.println("Deplasari efectuate ");
+                            processCell(locatie);
+                            // System.out.println(labView3.toString2(locatie));
+                            System.out.println(labView.toString5(parcurgere,locatie));
+                        } else {
+                            System.out.println("Nu este permis incercati alta varianta!");
+                        }
+                    } else if (mutare.equals("U")) {
+                        if (nextCellToExplore(locatie.i-1, locatie.j)) {
+                            System.out.println("Este permis   <am urcat cu o casuta >");
+                            locatie.i = locatie.i-1;
+                            parcurgere.add((Locatie) locatie.clone());
+                            deplasari.add("u");
+                            if (maze[locatie.i][locatie.j] == FINISH) {
+                                System.out.println("Am ajuns la final! FELICITARI!");
+                                processSolution(locatie);
+                                break;
+                            }
+                            System.out.println("Deplasari efectuate ");
+                            processCell(locatie);
+                            // System.out.println(labView3.toString2(locatie));
+                            System.out.println(labView.toString5(parcurgere,locatie));
+
+                        } else {
+                            System.out.println("Nu este permis incercati alta varianta!");
+                        }
+                    } else if (mutare.equals("L")) {
+                        if (nextCellToExplore(locatie.i, locatie.j - 1)) {
+                            System.out.println("Este permis    <la stanga cu o casuta >");
+                            locatie.j = locatie.j-1;
+                            parcurgere.add((Locatie) locatie.clone());
+                            deplasari.add("l");
+
+                            if (maze[locatie.i][locatie.j] == FINISH) {
+                                System.out.println("Am ajuns la final! FELICITARI!");
+                                processSolution(locatie);
+                                break;
+                            }
+                            System.out.println("Deplasari efectuate ");
+                            processCell(locatie);
+                            //  System.out.println(labView3.toString2(locatie));
+                            System.out.println(labView.toString5(parcurgere,locatie));
+                        } else {
+                            System.out.println("Nu este permis incercati alta varianta!");
+                        }
+                    }
+                    else if (mutare.equals("E")){
+                        break;
+                    }
+                    else if (mutare.equals("S")){
+                        try {
+                            this.toFile("Serializare.txt");
+                        }
+                        catch(IOException e){
+                            System.out.println("Esec la serializare!");
+                        }
+                    }
+                    else System.out.println("Comanda incorecta! Incercati din nou!");
+                }while(1==1);
+            }
+            catch (IllegalAccessError e){
+                // e.getStackTrace();
+
+            }
+            catch(ArrayIndexOutOfBoundsException e){
+                System.out.println("Eroare! Ati iesit din labirint");
+            }
+    }
+
 
 }

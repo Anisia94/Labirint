@@ -1,7 +1,10 @@
+import java.awt.*;
+import java.io.Serializable;
+
 /**
  * Created by Anisia-Ioana on 3/24/2015.
  */
-public class LabirintView1 implements LabyrinthView {
+public class LabirintView1 implements LabyrinthView, Serializable {
     private Integer[][] maze;
 
     public Integer[][] getMaze(){

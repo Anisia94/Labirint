@@ -8,8 +8,4 @@ public interface LabyrinthModel {
     public Boolean isWallAt(int i, int j);
     public Locatie getStartCell();
     public Locatie getFinishCell();
-  //  public void constructLabirint();
-  //  public Integer[][] getMatrixFromFile( );
-
-
 }

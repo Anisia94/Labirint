@@ -39,9 +39,6 @@ public class LabirintSolver2 implements LabyrinthSolver, LabyrinthModel, Labyrin
         return maze[0].length;
     }
 
-    public static void setLocatie(Locatie locatie) {
-        LabirintSolver1.locatie = locatie;
-    }
 
     @Override
     public Boolean isFreeAt(int i, int j) {
@@ -160,5 +157,6 @@ public class LabirintSolver2 implements LabyrinthSolver, LabyrinthModel, Labyrin
         maze[0][randomLinie] = -1;
         maze[row - 1][randomLinieSfarsit] = 2;
     }
+
 
 }
